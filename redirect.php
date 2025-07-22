@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require __DIR__ . "/vendor/autoload.php";
 require __DIR__ . "/config.php";
 
@@ -26,10 +28,19 @@ if (! isset($_GET['code'])) {
     // Get user info
     $oauth2 = new Google\Service\Oauth2($client);
     $userInfo = $oauth2->userinfo->get();
+
+    // ✅ Guardar en sesión
+    $_SESSION['userid'] = $userInfo->id;
+    $_SESSION['name'] = $userInfo->name;
+    $_SESSION['email'] = $userInfo->email;
+
+    // 🔁 Redirigir al index (o página segura)
+    header('Location: index.php');
+    exit;
     
-    echo 'User ID: ' . htmlspecialchars($userInfo->id) . '<br>';
-    echo 'Name: ' . htmlspecialchars($userInfo->name) . '<br>';
-    echo 'Email: ' . htmlspecialchars($userInfo->email) . '<br>';
+    //echo 'User ID: ' . htmlspecialchars($userInfo->id) . '<br>';
+    //echo 'Name: ' . htmlspecialchars($userInfo->name) . '<br>';
+    //echo 'Email: ' . htmlspecialchars($userInfo->email) . '<br>';
 }
 
 ?>
